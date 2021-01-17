@@ -19,6 +19,6 @@ Gem::Specification.new do |s|
 	s.metadata["source_code_uri"] = s.homepage
 	s.metadata["changelog_uri"] 	= s.homepage
 
-  s.add_development_dependency 'rake', '>= 0.9.2'
+  s.add_development_dependency 'rake', '~> 13.0'
   s.add_development_dependency 'rspec', '~> 3.10'
 end
