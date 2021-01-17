@@ -12,8 +12,12 @@ Gem::Specification.new do |s|
   s.bindir					= 'exe'
   s.executables			= s.files.grep(%r({^exe/})) { |f| File.basename(f) }
   s.require_paths		= ['lib']
-	s.homepage				= 'https://rubygems.org/gems/hash_comparator'
+	s.homepage				= 'https://github.com/tannerljohnson/hash_comparator'
 	s.license					= 'MIT'
+
+	s.metadata["homepage_uri"] 		= s.homepage
+	s.metadata["source_code_uri"] = s.homepage
+	s.metadata["changelog_uri"] 	= s.homepage
 
   s.add_development_dependency 'rake', '>= 0.9.2'
   s.add_development_dependency 'rspec', '~> 3.10'

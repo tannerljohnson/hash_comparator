@@ -1,39 +1,34 @@
-# compare_hashed_emails
-This is for comparing hashed gusto emails with hashed partner emails to identify customer overlap
+# Hash Comparator
+This is for comparing sets of human readable data with sets of hashed data
 
 ## Pre-requisites
-1. A .txt or .csv file with gusto emails
-2. A .txt or .csv file with hashed partner emails
-3. Hash algorithm used in #2
+1. Hashed items
+2. Human readable items
+3. Hash algorithm used in #1
 
-## Steps to use
-1. Clone this repository
-2. Specify hash algorithm in `src/main.rb` params for pre-requisites (3)
-3. Specify input/output files in `src/constants.rb`
-4. Run `ruby main.rb` to generate common hashes
-5. Run `ruby reverse_match.rb` to generate human readable common domain names
+## Usage
+```ruby
+irb(main):022:0> emails = ["john@gmail.com", "eric@potsandflowers.com"]
+=> ["john@gmail.com", "eric@potsandflowers.com"]
+irb(main):023:0> hashes = ['jane@yahoo.com', 'eric@potsandflowers.com', 'john@gmail.com'].map { |e| Digest::MD5.hexdigest e }
+=> ["0a028677b1fc578248759e697742841e", "e0a1eaa8d63e484adac998d53405fc10", "1f9d9a9efc2f523b2f09629444632b5c"]
+irb(main):024:0> HashComparator::Emails::Analyzer.find_common_human_readable(hash_function: :md5, subject_raw_emails: emails, target_hashed_emails: hashes)
+=> ["eric@potsandflowers.com", "john@gmail.com"]
+irb(main):025:0> HashComparator::Emails::Analyzer.find_common_human_readable(hash_function: :md5, subject_raw_emails: emails, target_hashed_emails: hashes, options: {
+parsing: { remove_generic_domains: true } })
+=> ["eric@potsandflowers.com"]
+irb(main):026:0> hashes = ['jane@yahoo.com', 'eric@potsandflowers.com', 'john@gmail.com'].map { |e| Digest::MD5.hexdigest e.split('@')[-1] }
+=> ["50cd1a9a183758039b0841aa738c3f0b", "b8821919ecb75bb9bbd7399638787ef5", "f74d39fa044aa309eaea14b9f57fe79c"]
+irb(main):027:0> HashComparator::Emails::Analyzer.find_common_human_readable(hash_function: :md5, subject_raw_emails: emails, target_hashed_emails: hashes)
+=> []
+irb(main):028:0> HashComparator::Emails::Analyzer.find_common_human_readable(hash_function: :md5, subject_raw_emails: emails, target_hashed_emails: hashes, options: {
+parsing: { remove_usernames: true } })
+=> ["gmail.com", "potsandflowers.com"]
+irb(main):029:0> HashComparator::Emails::Analyzer.find_common_human_readable(hash_function: :md5, subject_raw_emails: emails, target_hashed_emails: hashes, options: {
+parsing: { remove_generic_domains: true, remove_usernames: true } })
+=> ["potsandflowers.com"]
+```
 
-Optionally, you can choose to include generic email domains with the `exclude_common_domains` flag in `HashEmails`
-
-Example output
-```
-$ ruby main.rb
-Partner total hashed emails: 4
-Our total hashed emails: 5
-Number of hashes in both sets: 1
-Percentage partner overlap (both / partner total) = (1/4)
-See ../files/common_hashes.txt for a list of matched hashes
-(Run `ruby reverse_match.rb` to generate a human readable file of matched domains)
-```
-
-For reverse match
-```
-$ ruby reverse_match.rb
-Reverse matching common gusto/partner domain hashes...
-Reverse matching complete.
-Found 1 match.
-See ../files/common_human_readable.txt
-```
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

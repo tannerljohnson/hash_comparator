@@ -6,7 +6,7 @@ require 'hash_comparator/reverse_matcher'
 module HashComparator
   module Emails
     class Analyzer
-      def self.find_common_human_readable(hash_function:, subject_raw_emails:, target_hashed_emails:, options:)
+      def self.find_common_human_readable(hash_function:, subject_raw_emails:, target_hashed_emails:, options: {})
         new(
           hash_function: hash_function,
           subject_raw_emails: subject_raw_emails,
@@ -15,7 +15,7 @@ module HashComparator
         ).find_common_human_readable
       end
 
-      def self.find_common_hashes(hash_function:, subject_raw_emails:, target_hashed_emails:, options:)
+      def self.find_common_hashes(hash_function:, subject_raw_emails:, target_hashed_emails:, options: {})
         new(
           hash_function: hash_function,
           subject_raw_emails: subject_raw_emails,
