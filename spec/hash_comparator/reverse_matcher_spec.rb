@@ -6,7 +6,7 @@ RSpec.describe HashComparator::ReverseMatcher do
   let(:sample_item) { 'hello-world' }
   let(:expected_digest) { Digest::MD5.hexdigest(sample_item) }
 
-  it 'returns the thing' do
+  it 'returns the human readable item' do
     expect(subject).to eq [sample_item]
   end
 end

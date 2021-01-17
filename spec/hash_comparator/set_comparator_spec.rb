@@ -4,7 +4,7 @@ RSpec.describe HashComparator::SetComparator do
   let(:subject_items) { ['tanner', 'john', 'susan', 'susan'] }
   let(:target_items) { ['stacey', 'susan', 'susan'] }
 
-  it 'returns the thing' do
+  it 'returns the set intersection' do
     expect(subject).to eq ['susan']
   end
 end

@@ -6,7 +6,7 @@ RSpec.describe HashComparator::Hasher do
   let(:sample_item) { 'hello-world' }
   let(:expected_digest) { Digest::MD5.hexdigest(sample_item) }
 
-  it 'returns the thing' do
+  it 'returns the digest' do
     expect(subject).to eq [expected_digest]
   end
 end

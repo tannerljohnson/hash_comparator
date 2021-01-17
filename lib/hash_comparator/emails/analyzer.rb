@@ -6,9 +6,9 @@ require 'hash_comparator/reverse_matcher'
 module HashComparator
   module Emails
     class Analyzer
-      def self.execute(hash_function:, subject_raw_emails:, target_hashed_emails:, remove_username: false)
-        if remove_username
-          subject_raw_emails = Parser.parse(subject_raw_emails)
+      def self.find_common_human_readable(hash_function:, subject_raw_emails:, target_hashed_emails:, options:)
+        if options[:parsing]
+          subject_raw_emails = Parser.parse(subject_raw_emails, options[:parsing])
         end
 
         subject_hashed_emails = Hasher.hash(
@@ -24,6 +24,22 @@ module HashComparator
           hash_function: hash_function,
           hashed_items: hashed_common_emails,
           human_readable_items: subject_raw_emails
+        )
+      end
+
+      def self.find_common_hashes(hash_function:, subject_raw_emails:, target_hashed_emails:, options:)
+        if options[:parsing]
+          subject_raw_emails = Parser.parse(subject_raw_emails, options[:parsing])
+        end
+
+        subject_hashed_emails = Hasher.hash(
+          hash_function: hash_function,
+          human_readable_items: subject_raw_emails
+        )
+
+        SetComparator.calculate_overlap(
+          subject_items: subject_hashed_emails,
+          target_items: target_hashed_emails
         )
       end
     end

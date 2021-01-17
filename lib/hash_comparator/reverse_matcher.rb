@@ -24,10 +24,11 @@ module HashComparator
         hash_function: hash_function,
         human_readable_items: human_readable_items
       )
-      matches = human_readable_items.each_with_index.map do |item, i|
-        item if hashed_items.include?(subject_hashed_items[i])
-      end.compact
 
+      matches = human_readable_items.each_with_index.each_with_object([]) do |(item, i), list|
+        list << item if hashed_items.include?(subject_hashed_items[i])
+      end
+      
       matches.uniq.sort
     end
   end
