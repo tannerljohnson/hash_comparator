@@ -2,7 +2,12 @@ require 'digest'
 
 module HashComparator
   class Hasher
-    SUPPORTED_HASH_FUNCTIONS = { md5: Digest::MD5 }.freeze
+    SUPPORTED_HASH_FUNCTIONS = {
+      md5: Digest::MD5,
+      sha1: Digest::SHA1,
+      sha256: Digest::SHA2,
+      sha512: Digest::SHA512
+    }.freeze
 
     def self.hash(hash_function:, human_readable_items:)
       new(hash_function: hash_function, human_readable_items: human_readable_items).hash
