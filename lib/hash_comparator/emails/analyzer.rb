@@ -6,35 +6,44 @@ require 'hash_comparator/reverse_matcher'
 module HashComparator
   module Emails
     class Analyzer
-      def self.find_common_human_readable(hash_function:, subject_raw_emails:, target_hashed_emails:, options: {})
+      def self.find_common_plaintext(hash_function:, subject_plaintext_emails:, target_hashed_emails:, options: {})
         new(
           hash_function: hash_function,
-          subject_raw_emails: subject_raw_emails,
+          subject_plaintext_emails: subject_plaintext_emails,
           target_hashed_emails: target_hashed_emails,
           options: options
-        ).find_common_human_readable
+        ).find_common_plaintext
       end
 
-      def self.find_common_hashes(hash_function:, subject_raw_emails:, target_hashed_emails:, options: {})
+      def self.find_common_hashes(hash_function:, subject_plaintext_emails:, target_hashed_emails:, options: {})
         new(
           hash_function: hash_function,
-          subject_raw_emails: subject_raw_emails,
+          subject_plaintext_emails: subject_plaintext_emails,
           target_hashed_emails: target_hashed_emails,
           options: options
         ).find_common_hashes
       end
 
-      def initialize(hash_function:, subject_raw_emails:, target_hashed_emails:, options:)
+      def self.find_full_results(hash_function:, subject_plaintext_emails:, target_hashed_emails:, options: {})
+        new(
+          hash_function: hash_function,
+          subject_plaintext_emails: subject_plaintext_emails,
+          target_hashed_emails: target_hashed_emails,
+          options: options
+        ).find_full_results
+      end
+
+      def initialize(hash_function:, subject_plaintext_emails:, target_hashed_emails:, options:)
         @hash_function = hash_function
-        @subject_raw_emails = subject_raw_emails
+        @subject_plaintext_emails = subject_plaintext_emails
         @target_hashed_emails = target_hashed_emails
         @options = options
         @subject_hashed_emails = []
       end
 
-      attr_accessor :hash_function, :subject_raw_emails, :subject_hashed_emails, :target_hashed_emails, :options
+      attr_accessor :hash_function, :subject_plaintext_emails, :subject_hashed_emails, :target_hashed_emails, :options
 
-      def find_common_human_readable
+      def find_common_plaintext
         common_hashes = find_common_hashes
         reverse_match(common_hashes)
       end
@@ -45,18 +54,24 @@ module HashComparator
         compare
       end
 
+      def find_full_results
+        common_hashed_emails = find_common_hashes
+        common_plaintext_emails = reverse_match(common_hashed_emails)
+        { common_hashed_emails: common_hashed_emails, common_plaintext_emails: common_plaintext_emails }
+      end
+
       private
 
       def parse
         if options[:parsing]
-          @subject_raw_emails = Parser.parse(subject_raw_emails, options[:parsing])
+          @subject_plaintext_emails = Parser.parse(subject_plaintext_emails, options[:parsing])
         end
       end
 
       def hash
         @subject_hashed_emails = Hasher.hash(
           hash_function: hash_function,
-          human_readable_items: subject_raw_emails
+          plaintext_items: subject_plaintext_emails
         )
       end
 
@@ -71,7 +86,7 @@ module HashComparator
         ReverseMatcher.execute(
           hash_function: hash_function,
           hashed_items: common_hashes,
-          human_readable_items: subject_raw_emails
+          plaintext_items: subject_plaintext_emails
         )
       end
     end

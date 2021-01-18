@@ -1,7 +1,7 @@
 require 'digest'
 
 RSpec.describe HashComparator::Hasher do
-  subject { described_class.hash(hash_function: hash_function, human_readable_items: [sample_item]) }
+  subject { described_class.hash(hash_function: hash_function, plaintext_items: [sample_item]) }
 
   let(:sample_item) { 'hello-world' }
   let(:expected_digest) { Digest::MD5.hexdigest(sample_item) }

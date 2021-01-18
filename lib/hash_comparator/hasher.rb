@@ -9,19 +9,19 @@ module HashComparator
       sha512: Digest::SHA512
     }.freeze
 
-    def self.hash(hash_function:, human_readable_items:)
-      new(hash_function: hash_function, human_readable_items: human_readable_items).hash
+    def self.hash(hash_function:, plaintext_items:)
+      new(hash_function: hash_function, plaintext_items: plaintext_items).hash
     end
 
-    def initialize(hash_function:, human_readable_items:)
+    def initialize(hash_function:, plaintext_items:)
       @hash_function = SUPPORTED_HASH_FUNCTIONS[hash_function]
-      @human_readable_items = human_readable_items
+      @plaintext_items = plaintext_items
     end
 
-    attr_accessor :hash_function, :human_readable_items
+    attr_accessor :hash_function, :plaintext_items
 
     def hash
-      human_readable_items.map do |item|
+      plaintext_items.map do |item|
         hash_function.hexdigest(item)
       end
     end
